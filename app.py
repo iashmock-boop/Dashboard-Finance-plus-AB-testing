@@ -462,7 +462,7 @@ button[data-testid="stSidebarCollapseAction"]:hover svg {{
 </style>
 """, unsafe_allow_html=True)
 
-plt.rcParams.update({{
+plt.rcParams.update({
     'figure.facecolor':   BG,
     'axes.facecolor':     AX_BG,
     'axes.edgecolor':     SPINE,
@@ -484,7 +484,7 @@ plt.rcParams.update({{
     'axes.spines.left':   False,
     'axes.spines.bottom': False,
     'figure.dpi':         140,
-}})
+})
 
 # ── Filtered Data ─────────────────────────────────────────────────────────────
 df = df_raw[
