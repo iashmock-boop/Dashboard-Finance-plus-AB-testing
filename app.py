@@ -287,49 +287,42 @@ button[data-testid="stSidebarCollapseAction"]:hover svg {
 }
 </style>
 """, unsafe_allow_html=True)
-# ── Chart Theme ───────────────────────────────────────────────────────────────
-BG   = '#F8F9FA'
-AX_BG  = '#FFFFFF'
-GRID   = '#F1F3F5'
-SPINE  = '#E9ECEF'
-LABEL  = '#8A92A6'
-TEXT   = '#2D3142'
-
-plt.rcParams.update({
-    'figure.facecolor':     BG,
-    'axes.facecolor':       AX_BG,
-    'axes.edgecolor':       SPINE,
-    'axes.labelcolor':      LABEL,
-    'axes.titlecolor':      TEXT,
-    'axes.titlesize':       11,
-    'axes.titleweight':     '700',
-    'axes.titlepad':        16,
-    'xtick.color':          LABEL,
-    'ytick.color':          LABEL,
-    'xtick.labelsize':      9,
-    'ytick.labelsize':      9,
-    'grid.color':           GRID,
-    'grid.linewidth':       0.9,
-    'text.color':           TEXT,
-    'font.family':          'sans-serif',
-    'axes.spines.top':      False,
-    'axes.spines.right':    False,
-    'axes.spines.left':     False,
-    'axes.spines.bottom':   False,
-    'figure.dpi':           140,
-})
-
-P = {
-    'green':  '#1E6B4B',
-    'green2': '#D2E8DD',
-    'red':    '#A33333',
-    'red2':   '#F7D6D6',
-    'blue':   '#2A5298',
-    'blue2':  '#D1DFE8',
-    'ink':    '#242424',
-    'sand':   '#B5B5B5',
-    'muted':  '#EDEDED',
+# ── Theme Definitions (A/B) ───────────────────────────────────────────────────
+THEMES = {
+    "A: Clean Corporate": {
+        "app_bg": "#F8F9FA", "sidebar_bg": "#FFFFFF", "sidebar_border": "#E9ECEF",
+        "sidebar_text": "#495057", "card_bg": "#FFFFFF", "card_border": "#E9ECEF",
+        "accent": "#2A5298", "tag_bg": "#2A5298", "header_title": "#1A1D20",
+        "header_sub": "#6C757D", "section_num_bg": "#E9ECEF", "section_num_fg": "#495057",
+        "insight_border": "#2A5298", "badge_bg": "#E9ECEF",
+        "kpi_green": "#1E6B4B", "kpi_red": "#A33333", "kpi_blue": "#2A5298", "kpi_ink": "#242424",
+        "body_text": "#2D3142", "label_text": "#8A92A6", "sub_text": "#6C757D",
+        "BG": "#F8F9FA", "AX_BG": "#FFFFFF", "GRID": "#F1F3F5",
+        "SPINE": "#E9ECEF", "LABEL": "#8A92A6", "TEXT": "#2D3142",
+        "P": {
+            'green': '#1E6B4B', 'green2': '#D2E8DD', 'red': '#A33333', 'red2': '#F7D6D6',
+            'blue': '#2A5298', 'blue2': '#D1DFE8', 'ink': '#242424', 'sand': '#B5B5B5', 'muted': '#EDEDED',
+        },
+    },
+    "B: Sage & Slate": {
+        "app_bg": "#1E2A2A", "sidebar_bg": "#162020", "sidebar_border": "#2D3E3E",
+        "sidebar_text": "#A8BFBF", "card_bg": "#253232", "card_border": "#2D3E3E",
+        "accent": "#4A7C59", "tag_bg": "#4A7C59", "header_title": "#E8F0EF",
+        "header_sub": "#8FAAAA", "section_num_bg": "#2D3E3E", "section_num_fg": "#A8BFBF",
+        "insight_border": "#4A7C59", "badge_bg": "#2D3E3E",
+        "kpi_green": "#4A7C59", "kpi_red": "#B05555", "kpi_blue": "#3A7A8A", "kpi_ink": "#8FAAAA",
+        "body_text": "#D8ECEC", "label_text": "#7A9A9A", "sub_text": "#8FAAAA",
+        "BG": "#1E2A2A", "AX_BG": "#253232", "GRID": "#2D3E3E",
+        "SPINE": "#2D3E3E", "LABEL": "#7A9A9A", "TEXT": "#D8ECEC",
+        "P": {
+            'green': '#4A7C59', 'green2': '#2D4A38', 'red': '#B05555', 'red2': '#3D2525',
+            'blue': '#3A7A8A', 'blue2': '#1E3A42', 'ink': '#8FAAAA', 'sand': '#6A8A8A', 'muted': '#2D3E3E',
+        },
+    },
 }
+
+if "selected_theme" not in st.session_state:
+    st.session_state.selected_theme = "A: Clean Corporate"
 
 def fmt_rp(val, short=False):
     if short:
@@ -371,6 +364,18 @@ with st.sidebar:
       <div class="sidebar-brand-sub">Jul – Des 2025</div>
     </div>""", unsafe_allow_html=True)
 
+    # A/B Theme Toggle
+    st.markdown("<p style='font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:#8A92A6; margin-bottom:6px;'>⚗ A/B TEMA</p>", unsafe_allow_html=True)
+    selected_theme = st.radio(
+        "Pilih Tema",
+        list(THEMES.keys()),
+        index=list(THEMES.keys()).index(st.session_state.selected_theme),
+        key="theme_radio",
+        label_visibility="collapsed",
+    )
+    st.session_state.selected_theme = selected_theme
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+
     st.markdown("<p style='font-size:0.88rem; font-weight:700; margin-bottom:0px; color:#1A1D20;'>Filter Kontrol</p>", unsafe_allow_html=True)
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
@@ -385,6 +390,101 @@ with st.sidebar:
 
     st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
     st.markdown(f"<div style='font-size:0.75rem; color:#495057; font-family:JetBrains Mono,monospace; background:#E9ECEF; padding:10px; border-radius:6px; text-align:center; font-weight:500;'>{len(df_raw):,} total transaksi termuat</div>", unsafe_allow_html=True)
+
+# ── Apply Active Theme ────────────────────────────────────────────────────────
+T     = THEMES[st.session_state.selected_theme]
+BG    = T["BG"]
+AX_BG = T["AX_BG"]
+GRID  = T["GRID"]
+SPINE = T["SPINE"]
+LABEL = T["LABEL"]
+TEXT  = T["TEXT"]
+P     = T["P"]
+
+st.markdown(f"""
+<style>
+.stApp {{
+    background-color: {T['app_bg']} !important;
+    color: {T['body_text']} !important;
+}}
+[data-testid="stSidebar"] {{
+    background-color: {T['sidebar_bg']} !important;
+    border-right: 1px solid {T['sidebar_border']} !important;
+}}
+[data-testid="stSidebar"] * {{
+    color: {T['sidebar_text']} !important;
+}}
+[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] {{
+    background-color: {T['tag_bg']} !important;
+    border: 1px solid {T['accent']} !important;
+}}
+[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] span,
+[data-testid="stSidebar"] .stMultiSelect [data-baseweb="tag"] svg {{
+    color: #FFFFFF !important;
+    fill: #FFFFFF !important;
+}}
+.kpi-card {{ background: {T['card_bg']} !important; border-color: {T['card_border']} !important; }}
+.kpi-card.green .kpi-accent {{ background: {T['kpi_green']} !important; }}
+.kpi-card.red   .kpi-accent {{ background: {T['kpi_red']} !important; }}
+.kpi-card.blue  .kpi-accent {{ background: {T['kpi_blue']} !important; }}
+.kpi-card.ink   .kpi-accent {{ background: {T['kpi_ink']} !important; }}
+.kpi-label {{ color: {T['label_text']} !important; }}
+.kpi-value {{ color: {T['header_title']} !important; }}
+.kpi-value.up   {{ color: {T['kpi_green']} !important; }}
+.kpi-value.down {{ color: {T['kpi_red']} !important; }}
+.kpi-sub {{ color: {T['sub_text']} !important; }}
+.section-wrap {{ border-bottom-color: {T['card_border']} !important; }}
+.section-num {{ background: {T['section_num_bg']} !important; color: {T['section_num_fg']} !important; }}
+.section-title {{ color: {T['header_title']} !important; }}
+.section-desc {{ color: {T['label_text']} !important; }}
+.insight {{
+    background: {T['card_bg']} !important;
+    border-color: {T['card_border']} !important;
+    border-left-color: {T['insight_border']} !important;
+}}
+.insight-main {{ color: {T['body_text']} !important; }}
+.insight-icon {{ color: {T['accent']} !important; }}
+.page-eyebrow {{ color: {T['label_text']} !important; }}
+.page-title {{ color: {T['header_title']} !important; }}
+.page-sub {{ color: {T['header_sub']} !important; }}
+.page-header {{ border-bottom-color: {T['card_border']} !important; }}
+button[data-testid="stSidebarCollapseAction"] {{
+    background-color: {T['card_bg']} !important;
+    border: 1px solid {T['card_border']} !important;
+}}
+button[data-testid="stSidebarCollapseAction"]:hover {{
+    border-color: {T['accent']} !important;
+}}
+button[data-testid="stSidebarCollapseAction"]:hover svg {{
+    color: {T['accent']} !important;
+    fill: {T['accent']} !important;
+}}
+</style>
+""", unsafe_allow_html=True)
+
+plt.rcParams.update({{
+    'figure.facecolor':   BG,
+    'axes.facecolor':     AX_BG,
+    'axes.edgecolor':     SPINE,
+    'axes.labelcolor':    LABEL,
+    'axes.titlecolor':    TEXT,
+    'axes.titlesize':     11,
+    'axes.titleweight':   '700',
+    'axes.titlepad':      16,
+    'xtick.color':        LABEL,
+    'ytick.color':        LABEL,
+    'xtick.labelsize':    9,
+    'ytick.labelsize':    9,
+    'grid.color':         GRID,
+    'grid.linewidth':     0.9,
+    'text.color':         TEXT,
+    'font.family':        'sans-serif',
+    'axes.spines.top':    False,
+    'axes.spines.right':  False,
+    'axes.spines.left':   False,
+    'axes.spines.bottom': False,
+    'figure.dpi':         140,
+}})
 
 # ── Filtered Data ─────────────────────────────────────────────────────────────
 df = df_raw[
@@ -841,6 +941,204 @@ if len(expenses_df) > 0:
         f"Deviasi pengeluaran antar kedua hari tersebut berjarak sebesar <strong>{fmt_rp(selisih, short=True)}</strong>.",
         rec=f"Jadikan siklus hari {max_day_name} sebagai checkpoint evaluasi mingguan, dan biasakan untuk menahan atau menggeser transaksi non-esensial ke hari hemat."
     )
+# ── Q7 — A/B Testing: Perbandingan Dua Periode ───────────────────────────────
+section(7, "A/B Testing · Komparasi Periode", "Uji statistik perbandingan pola pengeluaran antar dua segmen waktu")
+
+if len(expenses_df) > 0:
+    available_months = [m for m in MONTH_ORDER if m in expenses_df['Month_Label'].unique()]
+
+    if len(available_months) >= 2:
+        st.markdown("""
+        <div style='background:#FFFFFF; border:1px solid #E9ECEF; border-radius:12px;
+                    padding:20px 24px; margin-bottom:24px;
+                    box-shadow:0 1px 4px rgba(0,0,0,0.04);'>
+          <div style='font-size:0.75rem; font-weight:700; text-transform:uppercase;
+                      letter-spacing:0.1em; color:#8A92A6; margin-bottom:12px;'>
+            ⚗ Konfigurasi Segmen Uji
+          </div>
+          <div style='font-size:0.85rem; color:#495057; line-height:1.6;'>
+            Pilih dua periode bulan berbeda sebagai <strong>Grup A (Kontrol)</strong> dan
+            <strong>Grup B (Eksperimen)</strong>. Dashboard akan menghitung perbedaan statistik
+            secara otomatis menggunakan <em>Welch's t-test</em> (two-sample, unequal variance).
+          </div>
+        </div>""", unsafe_allow_html=True)
+
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.markdown("<p style='font-size:0.8rem; font-weight:700; color:#2A5298; margin-bottom:6px;'>🅐 Grup A — Kontrol</p>", unsafe_allow_html=True)
+            ab_months_a = st.multiselect(
+                "Pilih bulan Grup A",
+                available_months,
+                default=[available_months[0]],
+                key="ab_a"
+            )
+        with col_b:
+            st.markdown("<p style='font-size:0.8rem; font-weight:700; color:#A33333; margin-bottom:6px;'>🅑 Grup B — Eksperimen</p>", unsafe_allow_html=True)
+            ab_months_b = st.multiselect(
+                "Pilih bulan Grup B",
+                available_months,
+                default=[available_months[1]] if len(available_months) > 1 else [available_months[0]],
+                key="ab_b"
+            )
+
+        if ab_months_a and ab_months_b:
+            df_a = expenses_df[expenses_df['Month_Label'].isin(ab_months_a)]['Amount']
+            df_b = expenses_df[expenses_df['Month_Label'].isin(ab_months_b)]['Amount']
+
+            mean_a, mean_b   = df_a.mean(), df_b.mean()
+            median_a, median_b = df_a.median(), df_b.median()
+            std_a, std_b     = df_a.std(), df_b.std()
+            n_a, n_b         = len(df_a), len(df_b)
+            total_a, total_b = df_a.sum(), df_b.sum()
+
+            # Welch's t-test
+            from scipy import stats as scipy_stats
+            t_stat, p_value = scipy_stats.ttest_ind(df_a, df_b, equal_var=False)
+            alpha = 0.05
+            is_significant = p_value < alpha
+            delta_mean = mean_b - mean_a
+            delta_pct  = (delta_mean / mean_a * 100) if mean_a != 0 else 0
+
+            # ── KPI Comparison Cards ──
+            st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+            c1, c2, c3, c4 = st.columns(4)
+            ab_cards = [
+                (c1, "#2A5298", "Rata-rata Grup A", fmt_rp(mean_a, short=True), f"{n_a} transaksi"),
+                (c2, "#A33333", "Rata-rata Grup B", fmt_rp(mean_b, short=True), f"{n_b} transaksi"),
+                (c3, "#1E6B4B" if delta_mean <= 0 else "#A33333",
+                    "Selisih Mean (B−A)",
+                    f"{'↑' if delta_mean > 0 else '↓'} {fmt_rp(abs(delta_mean), short=True)}",
+                    f"{abs(delta_pct):.1f}% {'lebih tinggi' if delta_mean > 0 else 'lebih rendah'}"),
+                (c4, "#1E6B4B" if is_significant else "#8A92A6",
+                    "Signifikansi Statistik",
+                    "✅ Signifikan" if is_significant else "⬜ Tidak Signifikan",
+                    f"p-value = {p_value:.4f}"),
+            ]
+            for col, accent, lbl, val, sub in ab_cards:
+                with col:
+                    st.markdown(f"""
+                    <div style='background:#FFFFFF; border:1px solid #E9ECEF; border-radius:12px;
+                                padding:20px; border-left:5px solid {accent};
+                                box-shadow:0 2px 8px rgba(0,0,0,0.04);'>
+                      <div style='font-size:0.72rem; font-weight:700; text-transform:uppercase;
+                                  letter-spacing:0.08em; color:#8A92A6; margin-bottom:8px;'>{lbl}</div>
+                      <div style='font-family:JetBrains Mono,monospace; font-size:1.35rem;
+                                  font-weight:700; color:#1A1D20; line-height:1.2;'>{val}</div>
+                      <div style='font-size:0.78rem; color:#6C757D; margin-top:8px;'>{sub}</div>
+                    </div>""", unsafe_allow_html=True)
+
+            st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
+
+            # ── Visualisasi: 3 chart AB Testing ──
+            fig, axes = plt.subplots(1, 3, figsize=(13, 4.2), gridspec_kw={'wspace': 0.28})
+            fig.patch.set_facecolor(BG)
+
+            label_a = " & ".join(ab_months_a)
+            label_b = " & ".join(ab_months_b)
+
+            # Chart 1: Bar Mean Comparison
+            bars_ab = axes[0].bar(
+                [f"A\n{label_a}", f"B\n{label_b}"],
+                [mean_a, mean_b],
+                color=[P['blue'], P['red']],
+                width=0.38, zorder=3, edgecolor='none'
+            )
+            axes[0].set_title('Perbandingan Rata-rata\nPengeluaran per Transaksi', weight='700')
+            axes[0].yaxis.set_major_formatter(mticker.FuncFormatter(rp_fmt_axis))
+            axes[0].grid(axis='y', zorder=0)
+            for bar, val in zip(bars_ab, [mean_a, mean_b]):
+                axes[0].text(bar.get_x() + bar.get_width()/2,
+                             bar.get_height() + max(mean_a, mean_b)*0.02,
+                             fmt_rp(val, short=True), ha='center', va='bottom',
+                             fontsize=9, color=TEXT, weight='700')
+
+            # Chart 2: Box Plot Distribution
+            bp = axes[1].boxplot(
+                [df_a.values, df_b.values],
+                labels=[f"Grup A\n{label_a}", f"Grup B\n{label_b}"],
+                patch_artist=True,
+                widths=0.38,
+                medianprops=dict(color='#1A1D20', linewidth=2),
+                whiskerprops=dict(color=LABEL, linestyle='--'),
+                capprops=dict(color=LABEL),
+                flierprops=dict(marker='o', color=LABEL, markersize=4, alpha=0.5)
+            )
+            bp['boxes'][0].set_facecolor('#D1DFE8')
+            bp['boxes'][1].set_facecolor('#F7D6D6')
+            axes[1].set_title('Distribusi Nilai Transaksi\n(Box Plot)', weight='700')
+            axes[1].yaxis.set_major_formatter(mticker.FuncFormatter(rp_fmt_axis))
+            axes[1].grid(axis='y', zorder=0)
+
+            # Chart 3: Total Spending Bar
+            bars_tot = axes[2].bar(
+                [f"A\n{label_a}", f"B\n{label_b}"],
+                [total_a, total_b],
+                color=[P['blue'], P['red']],
+                width=0.38, zorder=3, edgecolor='none'
+            )
+            axes[2].set_title('Total Akumulasi\nPengeluaran', weight='700')
+            axes[2].yaxis.set_major_formatter(mticker.FuncFormatter(rp_fmt_axis))
+            axes[2].grid(axis='y', zorder=0)
+            for bar, val in zip(bars_tot, [total_a, total_b]):
+                axes[2].text(bar.get_x() + bar.get_width()/2,
+                             bar.get_height() + max(total_a, total_b)*0.02,
+                             fmt_rp(val, short=True), ha='center', va='bottom',
+                             fontsize=9, color=TEXT, weight='700')
+
+            plt.tight_layout(pad=1.0)
+            st.pyplot(fig); plt.close()
+
+            # ── Tabel Ringkasan Statistik ──
+            st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+            stat_data = {
+                "Metrik": ["Jumlah Transaksi", "Total Pengeluaran", "Rata-rata (Mean)", "Median", "Std Deviasi"],
+                f"🅐 Grup A ({label_a})": [
+                    f"{n_a} txn",
+                    fmt_rp(total_a, short=True),
+                    fmt_rp(mean_a, short=True),
+                    fmt_rp(median_a, short=True),
+                    fmt_rp(std_a, short=True),
+                ],
+                f"🅑 Grup B ({label_b})": [
+                    f"{n_b} txn",
+                    fmt_rp(total_b, short=True),
+                    fmt_rp(mean_b, short=True),
+                    fmt_rp(median_b, short=True),
+                    fmt_rp(std_b, short=True),
+                ],
+            }
+            st.dataframe(
+                pd.DataFrame(stat_data).set_index("Metrik"),
+                use_container_width=True
+            )
+
+            # ── Insight Otomatis ──
+            sig_text = (
+                f"Perbedaan rata-rata pengeluaran antara kedua periode <strong>terbukti signifikan secara statistik</strong> "
+                f"(p = {p_value:.4f} &lt; α 0.05, t = {t_stat:.2f})."
+            ) if is_significant else (
+                f"Perbedaan rata-rata pengeluaran antara kedua periode <strong>tidak signifikan secara statistik</strong> "
+                f"(p = {p_value:.4f} &gt; α 0.05), artinya pola belanja relatif konsisten."
+            )
+            direction_text = (
+                f"Grup B ({label_b}) mencatat rata-rata pengeluaran per transaksi <strong>{abs(delta_pct):.1f}% lebih tinggi</strong> "
+                f"dibanding Grup A ({label_a}) — selisih sebesar <strong>{fmt_rp(abs(delta_mean), short=True)}</strong> per transaksi."
+            ) if delta_mean > 0 else (
+                f"Grup B ({label_b}) mencatat rata-rata pengeluaran per transaksi <strong>{abs(delta_pct):.1f}% lebih rendah</strong> "
+                f"dibanding Grup A ({label_a}) — efisiensi sebesar <strong>{fmt_rp(abs(delta_mean), short=True)}</strong> per transaksi."
+            )
+            rec_text = (
+                "Pola pengeluaran memiliki perbedaan nyata — investigasi kategori dominan di periode lebih tinggi dan terapkan budget cap yang lebih ketat."
+                if is_significant else
+                "Pola belanja antar periode cukup stabil. Pertahankan konsistensi ini dan fokus pada optimasi kategori pengeluaran terbesar."
+            )
+            insight(f"{sig_text} {direction_text}", rec=rec_text)
+
+        else:
+            st.info("Pilih minimal satu bulan untuk masing-masing Grup A dan Grup B.")
+    else:
+        st.warning("Data tidak cukup untuk A/B Testing — dibutuhkan minimal 2 bulan data pengeluaran.")
+
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.markdown("<div style='height:54px'></div>", unsafe_allow_html=True)
 st.markdown("""
